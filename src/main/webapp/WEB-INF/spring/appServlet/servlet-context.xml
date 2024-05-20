@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/mvc"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:beans="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc https://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
+
+	<!-- DispatcherServlet Context: defines this servlet's request-processing infrastructure -->
+	
+	<!-- Enables the Spring MVC @Controller programming model -->
+	<annotation-driven />
+
+	<!-- Handles HTTP GET requests for /resources/** by efficiently serving up static resources in the ${webappRoot}/resources directory -->
+	<resources mapping="/resources/**" location="/resources/" />
+	<resources mapping="/board/**" location="file:///C:/Temp/upload/board/" />
+
+	<!-- Resolves views selected for rendering by @Controllers to .jsp resources in the /WEB-INF/views directory -->
+	<beans:bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<beans:property name="prefix" value="/WEB-INF/views/" />
+		<beans:property name="suffix" value=".jsp" />
+	</beans:bean>
+	
+	
+	<!-- DB 접속 정보를 저장하는 객체 생성 -->
+	<beans:bean id="dataSource" class="org.apache.tomcat.dbcp.dbcp2.BasicDataSource">
+		<beans:property name="driverClassName" value="oracle.jdbc.driver.OracleDriver"/>
+		<beans:property name="url" value="jdbc:oracle:thin:@localhost:1521:xe"/>
+		<beans:property name="username" value="testuser"/>		<!-- 오라클 유저 이름 -->
+		<beans:property name="password" value="1234"/>		<!-- 오라클 비밀번호 -->
+	</beans:bean>
+	
+	<!-- Mybatis 설정 객체 -->
+	<beans:bean id="sqlSession" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<beans:property name="dataSource" ref="dataSource" />
+		<beans:property name="configLocation" value="classpath:mybatis-config.xml" />
+		<beans:property name="mapperLocations" value="classpath:/mapper/*.xml" />
+	</beans:bean>
+	
+	<!-- DB 작업을 수행하는 객체 -->
+	<beans:bean id="sqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate">
+		<beans:constructor-arg ref="sqlSession" />
+	</beans:bean>
+	
+	
+	<!-- 파일업로드 경로 문자열 객체로 생성 -->
+	<beans:bean id="fileLocation" class="java.lang.String">
+	    <beans:constructor-arg value="C:/Temp/upload" />
+	</beans:bean>
+	<!-- 파일 업로드용 객체 생성 -->
+	<beans:bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<beans:property name="maxUploadSize" value="10485760"/>
+	</beans:bean>
+	
+	
+	
+	<!-- Transaction 관리 객체 -->
+	<beans:bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<beans:property name="dataSource" ref="dataSource"/>
+	</beans:bean>
+	<!-- Transactional 어노테이션 사용을 위한 설정 -->
+	<tx:annotation-driven/>
+	
+	
+	
+	<!-- 패스워드 암호화용 객체 생성 -->
+	<beans:bean id="bCryptPasswordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>
+	
+	<!-- AOP 어노테이션 활성화-->
+	<aop:aspectj-autoproxy />
+	
+	
+	<!-- 인터셉터 객체 생성 -->
+	<beans:bean id="loginInterceptor" class="com.webtoon.www.util.LoginInterceptor" />
+	<!-- 인터셉터 설정 -->
+	<interceptors>
+		<interceptor>
+			<mapping path="/member/**"/>
+			<mapping path="/board/**"/>
+			<exclude-mapping path="/member/signUpFrm"/>
+			<exclude-mapping path="/member/signUp"/>
+			<exclude-mapping path="/member/signInFrm"/>
+			<exclude-mapping path="/member/signIn"/>
+			<exclude-mapping path="/member/signOut"/>
+			<exclude-mapping path="/board/boardList"/>
+			<exclude-mapping path="/board/boardView"/>
+			<exclude-mapping path="/board/boardView2"/>
+			<exclude-mapping path="/board/downloadFile"/>
+			<exclude-mapping path="/board/image/**"/>
+			<beans:ref bean="loginInterceptor"/>
+		</interceptor>
+	</interceptors>
+	
+	<context:component-scan base-package="com.webtoon.www" />
+	
+	
+	
+</beans:beans>

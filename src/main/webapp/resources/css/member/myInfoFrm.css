@@ -1,0 +1,26 @@
+@charset "UTF-8";
+
+.main-myInfo {
+  margin: 0 auto;
+  width: 620px;
+}
+
+.seperate-this{
+  width: 620px;
+}
+
+.myInfo-form{
+  width: 620px;
+  margin: 0 auto;
+}
+
+.btnArea{
+  margin: 0 auto;
+  padding-top: 45px;
+  text-align: center;
+}
+
+.checkPassword{
+  width: 620px;
+  margin: 0 auto;
+}

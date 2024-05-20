@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd" >
+<configuration>
+	<settings>
+		<setting name="mapUnderscoreToCamelCase" value="true"/> 
+		<!-- null 값이 발생하면 빈 문자열("")이 아닌 null로 처리 -->
+		<setting name="jdbcTypeForNull" value="NULL"/>
+	</settings>
+	<typeAliases>
+		<typeAlias type="com.webtoon.www.member.model.dto.Member" alias="member"/>
+		<typeAlias type="com.webtoon.www.board.model.dto.Board" alias="board"/>
+		<typeAlias type="com.webtoon.www.board.model.dto.BoardFile" alias="boardFile"/>
+		<typeAlias type="com.webtoon.www.board.model.dto.BoardPageData" alias="boardPageData"/>
+	</typeAliases>
+</configuration>

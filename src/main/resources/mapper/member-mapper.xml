@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="member">
+
+	<insert id="insertMember">
+		insert into member_tbl values(member_seq.nextval, #{memberId}, #{memberPw}, #{memberNickName}, #{memberName}, #{memberEmail}, #{memberPhone}, #{memberAddress}, #{memberBirthdate}, #{memberGender})
+	</insert>
+
+	<select id="selectOneMember" resultType="member">
+		select * from member_tbl where member_id = #{memberId}
+	</select>
+	
+	<update id="updateMember">
+		update member_tbl set member_nickname=#{memberNickName}, member_name=#{memberName}, member_email=#{memberEmail}, member_phone=#{memberPhone}, member_address=#{memberAddress}, member_birthdate=#{memberBirthdate}, member_gender=#{memberGender}
+		where member_id=#{memberId}
+	</update>
+
+</mapper>

@@ -1,0 +1,29 @@
+.main-signInFrm {
+  margin: 0 auto;
+  width: 500px;
+}
+
+.seperate-this{
+  width: 100%;
+}
+
+.signIn-form{
+  width: 100%;
+  margin: 0 auto;
+}
+
+.btnArea{
+  margin: 0 auto;
+  padding-top: 45px;
+  text-align: center;
+}
+
+.findMy{
+  width: 100%;
+  margin-bottom: 20px;
+  text-align: right;
+}
+.findMy > *{
+  font-size: 14px;
+  color: var(--main_gray_bold);
+}

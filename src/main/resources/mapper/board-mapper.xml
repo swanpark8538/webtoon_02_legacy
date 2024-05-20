@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="board">
+
+	<select id="getBoardList" resultType="board">
+		select * from (select rownum rnum, b.* from (select * from board_tbl order by 1 desc)b) where rnum between #{start} and #{end}
+	</select>
+	
+	<select id="totalCount" resultType="int">
+		select count(*) from board_tbl
+	</select>
+	
+	<insert id="insertBoard">
+		insert into board_tbl values(board_seq.nextval, #{boardTitle}, #{boardContent}, #{boardWriter}, 0, sysdate)
+		<selectKey resultType="int" order="AFTER" keyProperty="boardNo">
+			select max(board_no) from board_tbl
+		</selectKey>
+	</insert>
+	
+	<insert id="insertBoardFile">
+		insert into board_file_tbl values(board_file_seq.nextval, #{boardNo}, #{filename}, #{filepath})
+	</insert>
+	
+	<update id="updateReadCount">
+		update board_tbl set read_count=read_count+1 where board_no=#{boardNo}
+	</update>
+	
+	<select id="selectOneBoard" resultMap="getBoard">
+		select * from board_tbl where board_no=#{boardNo}
+	</select>
+	
+	<resultMap type="board" id="getBoard">
+		<result column="board_no" property="boardNo" />
+		<result column="board_title" property="boardTitle" />
+		<result column="board_content" property="boardContent" />
+		<result column="board_writer" property="boardWriter" />
+		<result column="read_count" property="readCount" />
+		<result column="board_date" property="boardDate" />
+		<collection
+			property="fileList"
+			select="selectOneBoardFiles"
+			column="board_no"
+			javaType="java.util.List"
+			ofType="boardFile">
+		</collection>
+	</resultMap>
+	
+	<select id="selectOneBoardFiles" resultType="boardFile">
+		select * from board_file_tbl where board_no=#{boardNo}
+	</select>
+	
+	<update id="updateBoard">
+		update board_tbl set board_title=#{boardTitle}, board_content=#{boardContent} where board_no=#{boardNo} 	
+	</update>
+	
+	<select id="selectDelFileList">
+		select * from board_file_tbl where board_file_no in
+		<foreach collection="array" item="boardFileNo" open="(" close=")" separator=",">
+			#{boardFileNo}
+		</foreach>
+	</select>
+	
+	<delete id="deleteBoardFile">
+		delete from board_file_tbl where board_file_no in
+		<foreach collection="array" item="boardFileNo" open="(" close=")" separator=",">
+			#{boardFileNo}
+		</foreach>
+	</delete>
+	
+	<delete id="deleteBoard">
+		delete from board_tbl where board_no=#{boardNo}
+	</delete>
+
+</mapper>
