@@ -28,7 +28,9 @@
 	
 	
 	<!-- DB 접속 정보를 저장하는 객체 생성 -->
-	<beans:bean id="dataSource" class="org.apache.tomcat.dbcp.dbcp2.BasicDataSource">
+	<!-- 선생님이 최초에 적어주신 경로 : org.apache.tomcat.dbcp.dbcp2.BasicDataSource... 그런데 존재하지 않는 경로임... -->
+	<!-- 내가 수정한 경로(Maven Dependencies에 보면 commons-dbcp-1.4.jar 안에 org.apache.commons.dbcp 패키지 안에 BasicDataSource 있음 -->
+	<beans:bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
 		<beans:property name="driverClassName" value="oracle.jdbc.driver.OracleDriver"/>
 		<beans:property name="url" value="jdbc:oracle:thin:@localhost:1521:xe"/>
 		<beans:property name="username" value="testuser"/>		<!-- 오라클 유저 이름 -->
