@@ -35,9 +35,13 @@ public class FileUtils {
 			count++;
 		}
 		
+		
 		try {
 			file.transferTo(new File(savepath+filepath));
-		} catch (IllegalStateException | IOException e) {
+		} catch (IllegalStateException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
